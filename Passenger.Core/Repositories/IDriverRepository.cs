@@ -2,17 +2,18 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Passenger.Core.Repositories
 {
     public interface IDriverRepository
     {
-        Driver Get(Guid userId);
+        Task<Driver> GetAsync(Guid userId);
 
-        IEnumerable<Driver>GetAll();
+        Task<IEnumerable<Driver>>GetAllAsync();
 
-        void Add(Driver driver);
+        Task AddAsync(Driver driver);
 
-        void Update(Driver driver);
+        Task UpdateAsync(Driver driver);
     }
 }
