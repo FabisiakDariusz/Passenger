@@ -11,6 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Passenger.Core\Passenger.Core.csproj" />
     <ProjectReference Include="..\Passenger.Infrastructure\Passenger.Infrastructure.csproj" />
+    <PackageReference Include="Autofac" Version="4.8.1" />
     
     <PackageReference Include="FluentAssertions" Version="5.4.2" />
     
