@@ -8,23 +8,13 @@ using Newtonsoft.Json;
 using Passenger.Infrastructure.DTO;
 using System.Net;
 using System.Text;
-using Passenger.Infrastructure.Commands.User;
+using Passenger.Infrastructure.Commands.Users;
 
 namespace Passenger.Tests.EndToEnd.Controllers
 {
     [TestFixture]
-    public class UsersControllerTests
+    public class UsersControllerTests : ControllerTestsBase
     {
-        private readonly TestServer _server;
-        private readonly HttpClient _client;
-
-        public UsersControllerTests()
-        {
-            // Arrange
-            _server = new TestServer(new WebHostBuilder()
-               .UseStartup<Startup>());
-            _client = _server.CreateClient();
-        }
 
         [Test]
         public async Task Given_valid_email_user_should_exists()
@@ -47,17 +37,17 @@ namespace Passenger.Tests.EndToEnd.Controllers
             var email = "user5@tmp.pl";
 
             // Act
-            var response = await _client.GetAsync($"users/{email}");
+            var response = await Client.GetAsync($"users/{email}");
             
             // Assert
             Assert.AreEqual(response.StatusCode, HttpStatusCode.NotFound);
         }
 
         [Test]
-        public async Task Given_invalid_email_user_should_be_created()
+        public async Task Given_unique_email_user_should_be_created()
         {
             // Arrange
-            var request = new CreateUser
+            var command = new CreateUser
             {
                 Email = "testuser@tmp.pl",
                 Username = "testuser",
@@ -65,29 +55,22 @@ namespace Passenger.Tests.EndToEnd.Controllers
             };
 
             // Act
-            var payload = GetPayload(request);
-            var response = await _client.PostAsync($"users",payload);
+            var payload = GetPayload(command);
+            var response = await Client.PostAsync($"users",payload);
 
             // Assert
             Assert.AreEqual(response.StatusCode, HttpStatusCode.Created);
-            Assert.AreEqual(response.Headers.Location.OriginalString, $"users/{request.Email}");
+            Assert.AreEqual(response.Headers.Location.OriginalString, $"users/{command.Email}");
             /*
-            var user = await GetUserDtoAsync(request.Email);
-            Assert.AreEqual(user.Email, request.Email); */
+            var user = await GetUserDtoAsync(command.Email);
+            Assert.AreEqual(user.Email, command.Email); */
         }
 
         private async Task<UserDto> GetUserDtoAsync(string email)
         {
-            var response = await _client.GetAsync($"users/{email}");
+            var response = await Client.GetAsync($"users/{email}");
             var responseString = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<UserDto>(responseString);
-        }
-
-        private static StringContent GetPayload(object data)
-        {
-            var json = JsonConvert.SerializeObject(data);
-
-            return new StringContent(json, Encoding.UTF8, "application/json");
         }
     }
 }

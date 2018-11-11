@@ -1,5 +1,5 @@
 ﻿using Passenger.Infrastructure.Commands;
-using Passenger.Infrastructure.Commands.User;
+using Passenger.Infrastructure.Commands.Users;
 using Passenger.Infrastructure.Services;
 using System;
 using System.Collections.Generic;

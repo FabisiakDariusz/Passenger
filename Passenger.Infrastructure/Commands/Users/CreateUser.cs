@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Passenger.Infrastructure.Commands.User
+namespace Passenger.Infrastructure.Commands.Users
 {
     public class CreateUser : ICommand
     {
